@@ -43,6 +43,6 @@ app.listen(PORT, () => {
 }
 
 
-
+startApolloServer();
 
 
