@@ -6,10 +6,13 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js' // the routes folder should become the schema folder
 import { authenticateToken } from './services/auth.js'; //need to change services to utils folder
+import { UserContext } from './schemas/resolvers.js';
 
-const server = new ApolloServer({
+
+const server = new ApolloServer<UserContext>({
   typeDefs,
-  resolvers
+  resolvers,
+    
 });
 
 const startApolloServer = async () => {
@@ -25,6 +28,9 @@ app.use(express.json());
 app.use('/graphql', expressMiddleware(server as any,
   {
     context: authenticateToken as any
+    //context:({ req }: {req: Request})
+    // const user = req.user;
+    //return { user };
   }
 ));
 
