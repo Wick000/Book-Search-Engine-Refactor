@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-import { createUser } from '../utils/API';
+import { createUser } from '../utils/API'; // eventually will hit mutation route
 import Auth from '../utils/auth';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
@@ -30,7 +30,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
     }
 
     try {
-      const response = await createUser(userFormData);
+      const response = await createUser(userFormData);//will spread into mutation functions variables
 
       if (!response.ok) {
         throw new Error('something went wrong!');

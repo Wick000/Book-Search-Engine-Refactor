@@ -26,11 +26,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/graphql', expressMiddleware(server as any,
-  {
-    context: authenticateToken as any
-    //context:({ req }: {req: Request})
-    // const user = req.user;
-    //return { user };
+  {  // uncomment when signup and login are working
+    // context: authenticateToken as any
+   
   }
 ));
 
