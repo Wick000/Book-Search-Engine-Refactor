@@ -29,14 +29,14 @@ const SavedBooks = () => {
   // use this to determine if `useEffect()` hook needs to run again
 
 
-  
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId: string) => {
    
 
     try {
       const { data } = await removeBook({
-        variables: { bookId }
+        variables: { bookId },
+        refetchQueries:[{ query: GET_ME}],
       });
 
    if (data.removeBook) {
