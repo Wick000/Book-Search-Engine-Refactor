@@ -2,16 +2,18 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
-import { login } from '../utils/mutations.js';//will come from mutation route
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER } from '../utils/mutations.js';//will come from mutation route
 import Auth from '../utils/auth';
 import type { User } from '../models/User';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
-const LoginForm = ({}: { handleModalClose: () => void }) => {
+const LoginForm = ({handleModalClose}: { handleModalClose: () => void }) => {
   const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  const [loginUser] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -29,14 +31,16 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
     }
 
     try {
-      const response = await loginUser(userFormData);//will be a mutation(using spread again)
+      const { data } = await loginUser({
+        variables: { email: userFormData.email, password: userFormData.password},
+      });//will be a mutation(using spread again)
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      
 
-      const { token } = await response.json();
+      const { token } = data.login;
       Auth.login(token);
+
+      handleModalClose();
     } catch (err) {
       console.error(err);
       setShowAlert(true);

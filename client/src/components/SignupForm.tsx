@@ -6,7 +6,7 @@ import { ADD_USER } from '../utils/mutations.js'; // eventually will hit mutatio
 import Auth from '../utils/auth';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
-const SignupForm = ({}: { handleModalClose: () => void }) => {
+const SignupForm = ({handleModalClose}: { handleModalClose: () => void }) => {
   // set initial form state
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: ''});
   // set state for form validation
@@ -41,7 +41,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
       const { token } = data.addUser;      
       Auth.login(token);
 
-      
+      handleModalClose();
     } catch (err) {
       console.error(err);
       setShowAlert(true);
