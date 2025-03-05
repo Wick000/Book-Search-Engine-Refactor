@@ -23,7 +23,8 @@ export const authenticateToken = ({ req }: any) => {
   }
 
   if (!token) {
-    throw new AuthenticationError('Token not provided');
+    //throw new AuthenticationError('Token not provided');
+    return req;
   }
 
   try {

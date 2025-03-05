@@ -6,10 +6,10 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js' // the routes folder should become the schema folder
 import { authenticateToken } from './services/auth.js'; //need to change services to utils folder
-import { UserContext } from './schemas/resolvers.js';
+//import { UserContext } from './schemas/resolvers.js';
+// import cors from 'cors'
 
-
-const server = new ApolloServer<UserContext>({
+const server = new ApolloServer({
   typeDefs,
   resolvers,
     
@@ -24,10 +24,12 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-app.use('/graphql', expressMiddleware(server as any,
+// app.use(cors({
+//   origin: 'http://localhost:3000'
+// }))
+app.use('/graphql', expressMiddleware(server ,
   {  // uncomment when signup and login are working
-     context: authenticateToken as any
+     context: authenticateToken 
    
   }
 ));

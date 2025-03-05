@@ -33,7 +33,7 @@ interface RemoveBookArgs {
 
 export interface UserContext {
     user?: {
-      id: string;
+      _id: string;
       username: string;
       email: string;
     };
@@ -45,7 +45,7 @@ const resolvers = {
       if (!context.user) {
         throw new GraphQLError('Not authenticated', { extensions: { code: 'UNAUTHENTICATED' } });
       }
-      return await User.findById(context.user.id);
+      return await User.findById(context.user._id);
     },
   },
 
@@ -70,10 +70,10 @@ const resolvers = {
       if (!context.user) {
         throw new GraphQLError('Not authenticated', { extensions: { code: 'UNAUTHENTICATED' } });
       }
-
+      //console.log(bookData)
       return await User.findByIdAndUpdate(
-        context.user.id,
-        { $addToSet: { savedBooks: bookData } },
+        context.user._id,
+        { $addToSet: { savedBooks: bookData  }},
         { new: true }
       );
     },
@@ -84,7 +84,7 @@ const resolvers = {
       }
 
       return await User.findByIdAndUpdate(
-        context.user.id,
+        context.user._id,
         { $pull: { savedBooks: { bookId } } },
         { new: true }
       );
