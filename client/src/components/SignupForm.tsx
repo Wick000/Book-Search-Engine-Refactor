@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
-import { createUser } from '../utils/API'; // eventually will hit mutation route
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../utils/mutations.js'; // eventually will hit mutation route
 import Auth from '../utils/auth';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
@@ -13,6 +13,8 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
+
+  const [addUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -30,14 +32,16 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
     }
 
     try {
-      const response = await createUser(userFormData);//will spread into mutation functions variables
+      const {data} = await addUser({
+        variables: { userData: {...userFormData}},
+      });//will spread into mutation functions variables
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      
 
-      const { token } = await response.json();
+      const { token } = data.addUser;      
       Auth.login(token);
+
+      
     } catch (err) {
       console.error(err);
       setShowAlert(true);
